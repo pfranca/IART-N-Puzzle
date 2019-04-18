@@ -23,6 +23,8 @@ function NPuzzle(size, solve_func) {
 	}
 };
 
+
+
 NPuzzle.prototype.setBoard = function(board){
     this.board = board;
 }
@@ -42,14 +44,15 @@ NPuzzle.prototype.getZeroPos = function() {
 	}
 };
 
-// Swap two items on a bisizeal array
+
 NPuzzle.prototype.swap = function(i1, j1, i2, j2) {
 	var temp = this.board[i1][j1];
 	this.board[i1][j1] = this.board[i2][j2];
 	this.board[i2][j2] = temp;
 }
 
-// Return the direction that a piece can be moved, if any
+
+
 NPuzzle.prototype.getMove = function(piece) {
 	var blankSpacePosition = this.getZeroPos();
 	var line = blankSpacePosition[0];
@@ -65,7 +68,8 @@ NPuzzle.prototype.getMove = function(piece) {
 	}
 };
 
-// Move a piece, if possible, and return the direction that it was moved
+
+
 NPuzzle.prototype.move = function(piece) {
 	var move = this.getMove(piece);
 	if (move != null) {
@@ -107,7 +111,7 @@ NPuzzle.prototype.isFInal = function() {
 	return true;
 };
 
-// Return a copy of current puzzle
+
 NPuzzle.prototype.getCopy = function() {
     var newNPuzzle = new NPuzzle(this.size);
     newNPuzzle.solve_func = this.solve_func;
@@ -122,7 +126,7 @@ NPuzzle.prototype.getCopy = function() {
 	return newNPuzzle;
 };
 
-// Return all current allowed moves
+
 NPuzzle.prototype.getAllowedMoves = function() {
 	var allowedMoves = [];
 	for (var i = 0; i < this.size; i++) {
