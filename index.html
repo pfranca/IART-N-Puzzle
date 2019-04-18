@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>iart</title>
+        
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="minheap.js"></script>
+        <script src="npuzzle.js"></script>
+        <script src="move.js"></script>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <h1>pop</h1>
+
+        <div>
+                <h3>A*: Manhattan distance</h3>
+                <div>
+                    <div id="container-a-manhattan" class="puzzle" style="width: 220px; height: 220px;">
+                       
+                        
+                    </div>
+                    <br>
+                    Time elapsed: <span id="elapsed">0</span>ms
+                    <br>
+                    <select id="algorithm">
+                            <option value="bfs">breadth first search</option>
+                            <option value="h1">A*: h1 - misplaced piece number</option>
+                            <option value="h2">A*: h2 - sum misplaced manhattan</option>
+                    </select>
+                    <script>
+                        let e = document.getElementById("algorithm");
+                        let strUser = e.options[e.selectedIndex].value;
+
+                    </script>
+                    <button id="shuffle">Shuffle</button>
+                    <button id="solve">Solve</button>
+                </div>
+
+                <script type="text/javascript">
+                    let board = new PuzzleGUI($("#container-a-manhattan"), 3, 50, 5, 100, 10, strUser);
+                    //board.puzzle.setMethod(strUser);
+                </script>
+            </div>
+    </body>
+
+</html>
