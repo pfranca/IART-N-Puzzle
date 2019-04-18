@@ -19,7 +19,7 @@ function GUI($container, board, dimension, size, margin, speed, num_shuffles, so
         
         let divId = self.$container[0].attributes[0].value;
         console.log(document.URL + ' #'+divId)
-        $('#'+divId).load(document.URL + '#'+divId);
+        $('#'+divId).load(document.URL + ' #'+divId);
     });
 
 	$container.parent().find("#solve").on("click", function() {
