@@ -160,3 +160,69 @@ NPuzzle.prototype.runBFS = function(){
     }
 };
 
+//-----------------------AStar------------------------
+
+NPuzzle.prototype.runAStar = function(){
+    let nodes = new MinHeap(null, function(a, b){
+        return a.distance - b.distance;
+    });
+    this.path = [];
+    nodes.push({puzzle : this, distance: 0});
+    while(nodes.size() > 0){
+        let node = nodes.pop().puzzle;
+        if(node.isFinal()){
+            return node.path;
+        }
+        let children = node.visit();
+        for(let i= 0; i<children.length; i++){
+            let child = children[i];
+            let f = child.g() + child.h();
+            nodes.push({puzzle : child, distance: f});
+        }
+    }
+};
+
+NPuzzle.prototype.g = function() {
+    return this.path.length;
+};
+
+
+NPuzzle.prototype.getMisplaced = function(){
+    let count = 0;
+    for (let i = 0; i < this.size; i++) {
+        for (let j = 0; j < this.size; j++) {
+            let cell = this.board[i][j];
+            if (cell != 0) {
+                let originalRow = Math.floor((cell - 1) / this.size);
+                let originalColumn = (cell - 1) % this.size;
+                if (i != originalRow || j != originalColumn) count++;
+            }
+        }
+    }    
+    return count;
+};
+
+NPuzzle.prototype.getManhattan = function(){
+    let distance = 0;
+    for (let i = 0; i < this.size; i++) {
+        for (let j = 0; j < this.size; j++) {
+            let cell = this.board[i][j];
+            if (cell != 0) {
+                let originalRow = Math.floor((cell - 1) / this.size);
+                let originalColumn = (cell - 1) % this.size;
+                distance += Math.abs(i - originalRow) + Math.abs(j - originalColumn);
+            }
+        }
+    }    
+    return distance;
+};
+
+NPuzzle.prototype.h = function(){
+    if(heuristic = cenas){
+        return this.getMisplaced();
+    } //TODO:
+    if(heuristic = outrascenas){
+        return this.getManhattan();
+    }
+}
+
