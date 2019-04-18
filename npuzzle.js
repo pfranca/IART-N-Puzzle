@@ -2,7 +2,7 @@ Direction = {
 	LEFT: "left",
 	RIGHT: "right",
 	UP: "up",
-	DOWN: "dow"
+	DOWN: "down"
 };
 
 function NPuzzle(size, solve_func) {
@@ -93,7 +93,7 @@ NPuzzle.prototype.move = function(piece) {
 	}
 };
 
-NPuzzle.prototype.isGoalState = function() {
+NPuzzle.prototype.isFInal = function() {
 	for (var i = 0; i < this.size; i++) {
 		for (var j = 0; j < this.size; j++) {
 			var piece = this.board[i][j];
@@ -161,7 +161,8 @@ NPuzzle.prototype.solveBFS = function() {
         var state = states[0];
         console.log(state);
 		states.shift();
-		if (state.isGoalState()) {
+		if (state.isFInal()) {
+            console.log(state.path.length);
 			return state.path;
 		}
 		states = states.concat(state.visit());
@@ -223,7 +224,8 @@ NPuzzle.prototype.solveA = function() {
         //console.log("AQUIIIIIIIIIIII")
         var state = states.pop().puzzle;
         console.log(state);
-		if (state.isGoalState()) {
+		if (state.isFInal()) {
+            console.log(state.path.length);
 			return state.path;
 		}
 		var children = state.visit();
