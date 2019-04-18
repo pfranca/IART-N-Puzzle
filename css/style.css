@@ -1,13 +1,24 @@
-
+body, html{
+    background-color: rgb(40, 42, 54);   
+}
 
 .puzzle {
 	position: relative;
 }
 .puzzle div {
 	position: absolute;
-	border: 1px solid black;
+	border: 1px solid #bd93f9;
 	text-align: center;
-	box-shadow: 1px 1px 1px black;
-	background-color: #E9E1FA;
+	box-shadow: 1px 1px 1px #8be9fd;
+	background-color: #bd93f9;
 	cursor: pointer;
+}
+
+.quadrado
+{
+    position: relative;
+    display: inline-block;
+    justify-content: center;
+    
+    
 }

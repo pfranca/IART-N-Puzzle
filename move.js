@@ -1,5 +1,7 @@
-function PuzzleGUI($container, dimension, size, margin, speed, num_shuffles, solve_func) {
-	this.$container = $container;
+function GUI($container, board, dimension, size, margin, speed, num_shuffles, solve_func) {
+    this.$container = $container;
+    console.log(this.$container);
+    console.log(this.$container[0].attributes[0].value);
 	this.dimension = dimension;
 	this.size = size;
 	this.margin = margin;
@@ -8,22 +10,23 @@ function PuzzleGUI($container, dimension, size, margin, speed, num_shuffles, sol
     this.solve_func = solve_func;
     console.log(solve_func);
     this.puzzle = new NPuzzle(dimension, solve_func);
-    this.puzzle.setBoard([[1,2,3],[5,0,6],[4,7,8]]);
+    this.puzzle.setBoard(board);
 	this.drawBlocks();
 	var self = this;
-	var shuffleFunc = function() {
-		$container.parent().find("#shuffle").attr("disabled", "disabled");
-		$container.parent().find("#solve").attr("disabled", "disabled");
-		self.shuffle(self.puzzle, self.num_shuffles, function() {
-			$container.parent().find("#shuffle").removeAttr("disabled");
-			$container.parent().find("#solve").removeAttr("disabled");
-		});
-	}; 
-	$container.parent().find("#shuffle").on("click", shuffleFunc);
-    //shuffleFunc();
+	
+	$container.parent().find("#reset").on("click", function(){
+        console.log(document.URL);
+        
+        let divId = self.$container[0].attributes[0].value;
+        console.log(document.URL + ' #'+divId)
+        $('#'+divId).load(document.URL + '#'+divId);
+    });
+
 	$container.parent().find("#solve").on("click", function() {
         $container.parent().find("#elapsed").html("<< Solving... >>");
-        self.puzzle.setMethod(document.getElementById("algorithm").options[document.getElementById("algorithm").selectedIndex].value);
+        let divId = self.$container[0].attributes[0].value;
+        let idId = "algorithm"+divId;
+        self.puzzle.setMethod(document.getElementById(idId).options[document.getElementById(idId).selectedIndex].value);
 		var start_time = new Date();
 		var path = self.puzzle.solve();
 		var elapsed = (new Date() - start_time) / 1000.0;
@@ -35,23 +38,17 @@ function PuzzleGUI($container, dimension, size, margin, speed, num_shuffles, sol
 			$container.parent().find("#solve").removeAttr("disabled");
 		});
 	});
-	$container.find("div").on("click", function() {
-		var id = $(this).attr("id");
-		var num = parseInt(id.slice(1));
-		var direction = self.puzzle.move(num);
-		if (direction != null) {
-			self.move(id, direction);
-		}
-	});
+
 }
 
-PuzzleGUI.prototype.drawBlocks = function() {
+GUI.prototype.drawBlocks = function() {
+    let divId = this.$container[0].attributes[0].value;
 	for (var i = 0; i < this.dimension; i++) {
 		for (var j = 0; j < this.dimension; j++) {
 			if (!(this.puzzle.board[i][j] == 0)) {
 				var id = this.puzzle.board[i][j];
-				this.$container.append("<div id='c" + id + "'>" + id + "</div>");
-				var $e = this.$container.find("#c" + id);
+				this.$container.append("<div id="+divId+"c"  + id + ">" + id + "</div>");
+				var $e = this.$container.find("#"+divId+"c" + id);
 				$e.css("left", j * (this.size + this.margin));
 				$e.css("top", i * (this.size + this.margin));
 				$e.css("width", this.size + "px");
@@ -65,8 +62,9 @@ PuzzleGUI.prototype.drawBlocks = function() {
 	this.$container.css("height", (this.size + this.margin) * this.dimension);	
 }
 
-PuzzleGUI.prototype.move = function(id, direction) {
-	var block = this.$container.find("#" + id);
+GUI.prototype.move = function(id, direction) {
+    let divId = this.$container[0].attributes[0].value;
+	var block = this.$container.find("#" + divId + id);
 	var distance = this.size + this.margin;
 	switch (direction) {
 		case "left":
@@ -92,33 +90,12 @@ PuzzleGUI.prototype.move = function(id, direction) {
 	}
 }
 
-PuzzleGUI.prototype.randomMove = function(puzzle, lastMove) {
-	var allowedMoves = puzzle.getAllMoves();
-	var rand;
-	do {
-		rand = Math.floor(Math.random() * allowedMoves.length);
-	} while (lastMove == allowedMoves[rand]);
-	var movingBlock = allowedMoves[rand];
-	var direction = puzzle.move(movingBlock);
-	this.move("c" + movingBlock, direction);
-	return movingBlock;
-}
 
-PuzzleGUI.prototype.shuffle = function(puzzle, times, callbackFunction, lastMove) {
-	if (times <= 0) {
-		callbackFunction();
-		return;
-	}
-	var movedBlock = this.randomMove(puzzle, lastMove);
-	var self = this;
-	setTimeout(function() {
-		self.shuffle(puzzle, times - 1, callbackFunction, movedBlock);
-	}, this.speed);
-}
-
-PuzzleGUI.prototype.solve = function(puzzle, path, callbackFunction) {
+GUI.prototype.solve = function(puzzle, path, callbackFunction) {
     //console.log(this.puzzle.getMethod());
-    this.puzzle.setMethod(document.getElementById("algorithm").options[document.getElementById("algorithm").selectedIndex].value);
+    let divId = this.$container[0].attributes[0].value;
+    let idId = "algorithm"+divId;
+    this.puzzle.setMethod(document.getElementById(idId).options[document.getElementById(idId).selectedIndex].value);
    // console.log(this.puzzle.getMethod());
 	if (path.length == 0) {
 		callbackFunction();
