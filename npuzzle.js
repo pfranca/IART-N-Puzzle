@@ -19,6 +19,20 @@ function NPuzzle(size){
     //console.log(this.board);
 };
 
+//kinda, like... a hacky javascript version of a copy constructor...
+NPuzzle.prototype.getCopy = function(){
+    let newInstance = new NPuzzle(this.size);
+    for(let i = 0; i<this.size; i++){
+        for(let j = 0; j<this.size; j++){
+            newInstance.board[i][j] = this.board[i][j];
+        }
+    }
+    for( let i = 0; i<this.path.length; i++){
+        newInstance.path.push(this.path[i]);
+    }
+    return newInstance; 
+};
+
 
 //get the position of the "empty" cell
 NPuzzle.prototype.getZeroPosition = function() {
@@ -85,7 +99,7 @@ NPuzzle.prototype.move = function(cell){
 }
 
 //check if the puzzle is in the final state;
-NPuzzle.prototype.isCompleted = function(){
+NPuzzle.prototype.isFinal = function(){
     for(let i = 0; i<this.size; i++){
         for(let j = 0; j<this.size; j++){
             let cell = this.board[i][j];
@@ -100,3 +114,49 @@ NPuzzle.prototype.isCompleted = function(){
     }
     return true;
 };
+
+//get all possible moves from a given state of the board.
+NPuzzle.prototype.getAllMoves = function(){
+    let allMoves = [];
+    for(let i = 0; i<this.size; i++){
+        for(let j = 0; j<this.size; j++){
+            let cell = this.board[i][j];
+            if(this.getMove(cell) != null){
+                allMoves.push(cell);
+            }
+        }
+    }
+    return allMoves;
+};
+
+NPuzzle.prototype.visit = function(){
+    let children = [];
+    let allMoves = this.getAllMoves();
+    for(let i = 0; i<allMoves.length; i++){
+        let move = allMoves[i];
+        if(move != this.lastMove){
+            let newInstance = this.getCopy();
+            newInstance.move(move);
+            newInstance.path.push(move);
+            children.push(newInstance);
+        }
+    }
+    return children;
+};
+
+//------------------------BFS-----------------------
+
+NPuzzle.prototype.runBFS = function(){
+    let initialState = this.getCopy();
+    initialState.path = [];
+    let nodes = [initialState];
+    while(nodes.length > 0){
+        let node = nodes[0];
+        nodes.shift();
+        if(node.isFinal()){
+            return node.path;
+        }
+        nodes = nodes.concat(node.visit());
+    }
+};
+
