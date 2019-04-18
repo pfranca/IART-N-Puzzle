@@ -1,10 +1,11 @@
 
 //Initialize a size*size filled board
-function NPuzzle(size){
+function NPuzzle(size, method){
     this.size = size;
     this.board = [];
     this.path = [];
     this.previousMove = null;
+    this.method = method;
 
     for(let i = 0; i<size; i++){
         this.board.push([]);
@@ -218,11 +219,19 @@ NPuzzle.prototype.getManhattan = function(){
 };
 
 NPuzzle.prototype.h = function(){
-    if(heuristic = cenas){
+    if(this.method == "h1"){
         return this.getMisplaced();
     } //TODO:
-    if(heuristic = outrascenas){
+    if(this.method == "h2"){
         return this.getManhattan();
     }
-}
+};
+
+NPuzzle.prototype.solve = function(){
+    if (this.method == "bfs"){
+        return this.runBFS();
+    } else{
+        return this.runAStar();
+    }
+};
 
